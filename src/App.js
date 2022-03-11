@@ -1,3 +1,4 @@
+    /* eslint-disable */
 import React, {useState} from "react";
 import logo from './logo.svg';
 import './App.css';
@@ -10,6 +11,8 @@ function App() {
   let posts = " 오늘의 todo list";
 
   let [따봉, 따봉변경] = useState(0);
+  let [modal, modal변경] = useState(true);
+  let [누른제목, 누른제목변경] = useState(0);
 
   function 제목바꾸기() {  //state를 변경하는것은 원래의 array전체를 put으로 덮어버리는것을 의미, 그래서 원래내용과 형식을 가져와서 수정할부분만 작업
     //글제목수정(['여자 코트 추천','남자댕댕이 코트 추천', '강아지 코트 추천']);
@@ -27,30 +30,38 @@ function App() {
         <div>개발 blog</div>
       </div>
       <button onClick={ 제목바꾸기 }>정렬</button>
-      <div className="list">
-        <h3>{ 글제목[0] } <span onClick={ () => { 따봉변경(따봉+1)} }>👍</span> {따봉} </h3>
-        <p>3월 3일 발행</p>
-        <hr/>
-      </div>
-      <div className="list">
-        <h3>{글제목[1]}</h3>
-        <p>3월 3일 발행</p>
-        <hr/>
-      </div>
-      <div className="list">
-        <h3>{ 글제목[2] }</h3>
-        <p>3월 3일 발행</p>
-        <hr/>
-      </div>
-        <Modal/>
+        {
+            글제목.map((글, i)=>{
+                return (
+                    <div className="list">
+                        <h3
+                            onClick={ ()=>{ 누른제목변경(i) }}>
+                            {글}
+                            <span onClick={ () => { 따봉변경(따봉+1)} }>👍</span>
+                            {따봉}
+                        </h3>
+                        <p>3월 3일 발행</p>
+                        <hr/>
+                    </div>
+                )
+            })
+        }
+        <button onClick={()=>{modal변경(!modal)}}>버튼</button>
+        {
+            modal === true
+            ? <Modal 글제목={글제목} 누른제목={누른제목}></Modal>
+            : null
+        }
+
+
     </div>
   );
 }
 
-function Modal() {
+function Modal(props) {
     return (
         <div className="modal">
-            <h2>제목</h2>
+            <h2>제목 : {props.글제목[props.누른제목]}</h2>
             <p>날짜</p>
             <p>상세내용</p>
         </div>
